@@ -38,16 +38,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $role = null;
 
     #[ORM\Column]
-    private ?int $subscription_id = null;
+    private ?int $subscriptionId = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $subscription_end_at = null;
+    private ?\DateTimeInterface $subscriptionEndAt = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $created_at = null;
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $updated_at = null;
+    private ?\DateTimeInterface $updatedAt = null;
 
     public function getId(): ?int
     {
@@ -157,48 +157,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getSubscriptionId(): ?int
     {
-        return $this->subscription_id;
+        return $this->subscriptionId;
     }
 
-    public function setSubscriptionId(int $subscription_id): static
+    public function setSubscriptionId(int $subscriptionId): static
     {
-        $this->subscription_id = $subscription_id;
+        $this->subscriptionId = $subscriptionId;
 
         return $this;
     }
 
     public function getSubscriptionEndAt(): ?\DateTimeInterface
     {
-        return $this->subscription_end_at;
+        return $this->subscriptionEndAt;
     }
 
-    public function setSubscriptionEndAt(\DateTimeInterface $subscription_end_at): static
+    public function setSubscriptionEndAt(\DateTimeInterface $subscriptionEndAt): static
     {
-        $this->subscription_end_at = $subscription_end_at;
+        $this->subscriptionEndAt = $subscriptionEndAt;
 
         return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeInterface
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updated_at): static
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
     {
-        $this->updated_at = $updated_at;
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }
