@@ -1,0 +1,3 @@
+app_generate_pdf:
+    path: '/convert/pdf'
+    controller: 'App\Controller\PdfController::CreatePdf'
