@@ -58,6 +58,11 @@ services:
     networks:
       - symfony-network
 
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    ports:
+      - "3000:3000"
+
 networks:
   symfony-network:
     driver: bridge
