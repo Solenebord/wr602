@@ -1,3 +1,7 @@
-app_generate_pdf:
+app_generate_pdf_form:
     path: '/convert/pdf'
+    controller: 'App\Controller\PdfController::generatePdfForm'
+
+app_generate_pdf:
+    path: '/convert/pdf/generate'
     controller: 'App\Controller\PdfController::CreatePdf'
