@@ -11,7 +11,7 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class GotenbergTest extends TestCase
 {
-    public function testGeneratePdfFromHtml(): void
+    public function TestCreatePdf(): void
     {
         // Mock HttpClientInterface
         $httpClient = $this->createMock(HttpClientInterface::class);
@@ -20,11 +20,14 @@ class GotenbergTest extends TestCase
             ->method('request')
             ->with(
                 'POST',
-                'http://localhost:3000/forms/chromium/convert/html',
+                'http://localhost:3000/forms/chromium/convert/url',
                 [
+                    'headers' => [
+                        'Content-Type' =>'multipart/form-data'
+                    ],
                     'body' => [
-                        'html'=>'<html><body><h1>Hello, world!</h1></body></html>',
-                    ]
+                        'url' => 'https://bigrat.monster/'
+                    ],
                 ]
             )
             ->willReturn($this->createMock(ResponseInterface::class));
@@ -38,7 +41,7 @@ class GotenbergTest extends TestCase
         $gotenbergService = new GotenbergService($httpClient);
 
         // Call the method to be tested
-        $pdfContent = $gotenbergService->generatePdfFromHtml('<html><body><h1>Hello, world!</h1></body></html>');
+        $pdfContent = $gotenbergService->CreatePdf();
 
         // Assert that the method returns the expected PDF content
         $this->assertEquals('PDF Content', $pdfContent);

@@ -13,12 +13,12 @@ class GotenbergService
     ) {
     }
 
-    public function CreatePdf() : string
+    public function CreatePdf($formData) : string
     {
 
-        $formData = [
-            'url' => 'https://bigrat.monster/'
-        ];
+        // $formData = [
+        //     'url' => 'https://bigrat.monster/'
+        // ];
 
         $response = $this->client->request(
             'POST',
@@ -27,7 +27,7 @@ class GotenbergService
                 'headers' => [
                     'Content-Type' =>'multipart/form-data'
                 ],
-                'body' => $formData,
+                'body' => ['url' => $formData],
                 
             ]
         );
