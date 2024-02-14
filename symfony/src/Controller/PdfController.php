@@ -14,31 +14,42 @@ class PdfController extends AbstractController
 {
     private $gotenbergService;
    
-    #[Route('/convert/pdf', name: 'app_generate_pdf_form')]
-    public function generatePdfForm(Request $request): Response
-    {
-        return $this->render('pdf/index.html.twig');
-    }
     
     public function __construct(GotenbergService $gotenbergService)
     {
         $this->gotenbergService = $gotenbergService;
     }
 
-    #[Route('/convert/pdf/generate', name: 'app_generate_pdf', methods: ['POST'])]
-    public function CreatePdf(Request $request): Response
+  
+    public function generatePdfForm(Request $request): Response
     {
-        // $formData = 'https://bigrat.monster/';
-        $formData = $request->request->get('formData');
-        // $htmlContent = '<html><body><h1>Hello, world!</h1></body></html>';
-        $pdfContent = $this->gotenbergService->CreatePdf($formData);
+        // https://bigrat.monster/
 
-        // Affichez le contenu PDF généré en tant que réponse HTTP
-        return new Response($pdfContent, 200, [
-            'Content-Type' => 'application/pdf',
-        ]
-    ); 
+        // Créer le formulaire
+        $form = $this->createFormBuilder()
+        ->add('url', null, ['required' => true])
+        ->getForm();
 
-        // return new Response('PDF généré avec succès !');
+        // Afficher le formulaire
+        return $this->render('pdf/index.html.twig', [
+            'form' => $form->createView(),
+        ]);
+        
     }
+
+    public function generatePdf(Request $request): Response
+    {
+        // Récupérer l'URL saisie à partir des données du formulaire
+        $url = $request->request->get('url');
+
+        // Faites appel à votre service pour générer le PDF
+        $pdf = $this->gotenbergService->CreatePdf($url);
+
+        // Afficher le contenu PDF généré en tant que réponse HTTP
+        return new Response($pdf, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="document.pdf"',
+        ]);
+    }
+
 }

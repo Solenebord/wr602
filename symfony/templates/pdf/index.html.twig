@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PdfController!{% endblock %}
+{% block title %}Create PDF{% endblock %}
 
 {% block body %}
 <style>
@@ -13,7 +13,7 @@
 
     <form method="post" action="{{ path('app_generate_pdf') }}">
         <label for="url">URL:</label>
-        <input type="text" id="url" name="formData">
+        <input type="text" id="url" name="url" required />
         <button type="submit">Générer PDF</button>
     </form>
 </div>
