@@ -1,71 +1,60 @@
-version: "3.7"
+version: '3.8'
 services:
-  app:
-    build:
-      args:
-        user: me
-        uid: 1000
-      context: ./
-      dockerfile: docker/app/Dockerfile
-    image: symfony
-    container_name: symfony-app
-    restart: unless-stopped
-    working_dir: /var/www/
+  web:
+    image: mmi3docker/symfony
+    container_name : symfony
+    restart: always
+
+    ports:
+      - 8088:80
+
+    depends_on:
+      - db
+
     volumes:
-      - ./:/var/www
-    networks:
-      - symfony-network
+      - ./www/:/var/www
+      - ./sites/:/etc/apache2/sites-enabled/
 
   db:
-    image: mariadb:latest
-    container_name: symfony-db
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_USER: ${DB_USERNAME}
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
+    image: mariadb:10.8
+    container_name: mariadb
+    restart: always
+
     volumes:
-      - symfony-data:/var/lib/mysql
-    networks:
-      - symfony-network
+      - db-volume:/var/lib/mysql
+
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: db_symfony
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 123456
 
   phpmyadmin:
-    image: phpmyadmin:latest
-    container_name: symfony-pma
-    ports:
-      - 8080:80
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_docker_symfony
+    links:
+      - db
     environment:
       PMA_HOST: db
-      MYSQL_USERNAME: "${DB_USERNAME}"
-      MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
-      UPLOAD_LIMIT: 300M
-    restart: unless-stopped
-    networks:
-      - symfony-network
-
-  nginx:
-    image: nginx:alpine
-    container_name: symfony-nginx
-    restart: unless-stopped
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
     ports:
-      - 8000:80
-    volumes:
-      - ./:/var/www
-      - ./docker/nginx:/etc/nginx/conf.d/
-    networks:
-      - symfony-network
+      - 8090:80
 
+  maildev:
+    image: maildev/maildev
+    container_name: maildev_docker_symfony
+    command: bin/maildev --web 80 --smtp 1025 --hide-extensions STARTTLS
+    restart: always
+    ports:
+      - 8081:80
+  
   gotenberg:
     image: gotenberg/gotenberg:8
+    restart: always
     ports:
       - "3000:3000"
 
-networks:
-  symfony-network:
-    driver: bridge
-
 volumes:
-  symfony-data:
+  db-volume:
