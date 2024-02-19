@@ -19,16 +19,16 @@ class AppFixtures extends Fixture
         //     FREE
         $subscriptionFree = new Subscription();
         $subscriptionFree->setTitle('Free');
-        $subscriptionFree->setDescription('Abonnement gratuit par défaut, 3 PDF/jour.');
-        $subscriptionFree->setPdfLimit(3);
+        $subscriptionFree->setDescription('Abonnement gratuit par défaut, 2 PDF/jour.');
+        $subscriptionFree->setPdfLimit(2);
         $subscriptionFree->setPrice(0.00);
             $manager->persist($subscriptionFree);
 
             //PREMIUM
         $subscriptionPremium = new Subscription();
         $subscriptionPremium->setTitle('Premium');
-        $subscriptionPremium->setDescription('Abonnement premium, 20 PDF/jour.');
-        $subscriptionPremium->setPdfLimit(20);
+        $subscriptionPremium->setDescription('Abonnement premium, 4 PDF/jour.');
+        $subscriptionPremium->setPdfLimit(4);
         $subscriptionPremium->setPrice(9.99);
             $manager->persist($subscriptionPremium);
 

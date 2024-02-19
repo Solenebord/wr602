@@ -4,17 +4,32 @@
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+   .carte {
+    border-color: greenyellow;
+    padding: 10px;
+   }
 </style>
 
 <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
     <ul>
-        <li>Your controller at <code>C:/Users/Solène/wr602-devback/wr602/symfony/src/Controller/SubscriptionController.php</code></li>
-        <li>Your template at <code>C:/Users/Solène/wr602-devback/wr602/symfony/templates/subscription/index.html.twig</code></li>
+        {% for subscription in subscriptions %}
+        <div class="carte">
+        <li>{{ subscription.title }}</li>
+        <form method="post" action="{{path('subscription_validation')}}">
+            <input type="hidden" name="title" value="{{ subscription.title }}">
+            {% if currentSubscription == subscription.title %}
+            <p>Abonnement actuel</p>
+            {% else %}
+            <button type="submit">S'abonner</button>
+            {% endif %}
+
+        </form>
+        </div>
+            <!-- Afficher d'autres informations sur l'abonnement si nécessaire -->
+        {% endfor %}
     </ul>
+
 </div>
 {% endblock %}
