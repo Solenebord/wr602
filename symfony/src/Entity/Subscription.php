@@ -16,6 +16,9 @@ class Subscription
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Choice(['Free', 'Premium', 'Ultra'])]
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
