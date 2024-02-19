@@ -10,6 +10,10 @@ app_login:
     path: /login
     controller: App\Controller\SecurityController::login
 
+app_logout:
+    path: /logout
+    controller: App\Controller\SecurityController::logout
+
 app_register:
     path: /register
     controller: App\Controller\RegistrationController::register
@@ -22,13 +26,17 @@ homepage:
     path: /
     controller: App\Controller\HomeController::index
 
-subscription_change:
-    path: /subscription/change
-    controller: App\Controller\SubscriptionController::changeSubscription
+# subscription_change:
+#     path: /subscription/change
+#     controller: App\Controller\SubscriptionController::changeSubscription
 
 subscription:
     path: /subscription
-    controller: App\Controller\Subscription
+    controller: App\Controller\SubscriptionController::index
+
+subscription_validation:
+    path: /subscription/validation
+    controller: App\Controller\SubscriptionController::validation
 
 pdf_generation:
     path: /pdf/generate

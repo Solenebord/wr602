@@ -17,6 +17,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use App\Entity\Subscription;
 
+
 class RegistrationController extends AbstractController
 {
     /* private EmailVerifier $emailVerifier;
@@ -34,7 +35,7 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         $abonnement = $entityManager->getRepository(Subscription::class)
-                                    ->findBy(['id' => 1]);
+                                    ->findBy(['title' => 'Free']);
         $abonnement = $abonnement[0];
 
         $time = new \DateTimeImmutable;
@@ -56,9 +57,10 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
+            
            
 
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('registration/register.html.twig', [

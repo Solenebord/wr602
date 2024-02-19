@@ -1,0 +1,37 @@
+<header>
+    {# <a href="{{ path('connexion') }}">connecte toi pétasse</a>  #}
+    <nav>
+        <ul>
+            <li>
+                <a href="{{ path('homepage') }}">Accueil</a>
+            </li>
+            <li>
+                <a href="{{ path('subscription') }}">Abonnements</a>
+            </li>
+             <li>
+                <a href="{{ path('app_pdf') }}">Créer un PDF</a>
+            </li>
+            <li>
+                <a href="{{ path('history') }}">Mes PDFs</a>
+            </li>
+            <li>
+                {% if app.user %}
+            
+                Hi {{ app.user.userIdentifier }} ! <a href="{{ path('app_logout') }}">Logout</a>
+            
+                {% else %}
+
+                <a href="{{ path('app_login') }}">Connexion/Inscription</a>
+
+                {% endif %}
+            </li>
+        </ul>
+        {# {{ dump(app.user)}} #}
+        {# {% if app.user %}
+            <div class="mb-3">
+                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+            </div>
+        {% endif %} #}
+    </nav>
+
+</header>
