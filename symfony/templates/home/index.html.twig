@@ -11,10 +11,11 @@
 <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/Users/Solène/wr602-devback/wr602/symfony/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>C:/Users/Solène/wr602-devback/wr602/symfony/templates/home/index.html.twig</code></li>
-    </ul>
+    {% if app.user %}
+            
+                You are logged in as {{ app.user.userIdentifier }} ! 
+            
+    {% endif %}
+
 </div>
 {% endblock %}
