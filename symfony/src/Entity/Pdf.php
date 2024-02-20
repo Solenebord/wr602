@@ -2,10 +2,15 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\PdfRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PdfRepository::class)]
+#[Broadcast]
+#[ORM\HasLifecycleCallbacks]
+#[ApiResource]
 class Pdf
 {
     #[ORM\Id]
@@ -16,11 +21,17 @@ class Pdf
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column]
-    private ?int $userId = null;
+    
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'PDFs')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?user $userId = null;
+
+    #[ORM\Column(type: Types::BLOB)]
+    private $content = null;
 
     public function getId(): ?int
     {
@@ -39,12 +50,12 @@ class Pdf
         return $this;
     }
 
-    public function getUserId(): ?int
+    public function getUserId(): ?user
     {
         return $this->userId;
     }
 
-    public function setUserId(int $userId): static
+    public function setUserId(?user $userId): static
     {
         $this->userId = $userId;
 
@@ -59,6 +70,18 @@ class Pdf
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    public function setContent($content): static
+    {
+        $this->content = $content;
 
         return $this;
     }

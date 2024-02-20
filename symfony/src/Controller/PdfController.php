@@ -1,55 +1,99 @@
 <?php
 
-// src/Controller/PdfController.php
-
 namespace App\Controller;
 
 use App\Service\GotenbergService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Forms;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use App\Entity\Subscription;
+use App\Entity\User;
+use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\Pdf;
+
+
+
 
 class PdfController extends AbstractController
 {
-    private $gotenbergService;
-   
-    
+
     public function __construct(GotenbergService $gotenbergService)
     {
         $this->gotenbergService = $gotenbergService;
     }
 
-  
-    public function generatePdfForm(Request $request): Response
+    // #[Route('/gotenberg', name: 'app_gotenberg')]
+    public function generatePdfForm(Request $request, GotenbergService $gotenbergService, UserInterface $user, EntityManagerInterface $entityManager): Response
+
     {
-        // https://bigrat.monster/
-
-        // Créer le formulaire
         $form = $this->createFormBuilder()
-        ->add('url', null, ['required' => true])
-        ->getForm();
+            ->add('url', null, ['required' => true])
+            ->add('title', TextType::class, ['required' => false])
+            ->getForm();
+        $form->handleRequest($request);
 
-        // Afficher le formulaire
+        if ($form->isSubmitted() && $form->isValid()) {
+            $url = $request->getPayload()->get('url');
+            $title = $request->getPayload()->get('title');
+            /* $url = $form->getData()['url'];
+            $title = $form->getData()['title']; */
+
+            $pdfContent = $gotenbergService->CreatePdf($url);
+
+            $time = new \DateTimeImmutable;
+            // $date = $time->format('Y-m-d H:i:s');
+
+            $newPdf = new PDF;
+
+            if (!empty($title)) { // Vérifiez si le champ 'title' n'est pas vide
+                // Si le champ 'title' n'est pas vide, utilisez sa valeur
+                $newPdf->setTitle($title);
+            } else {
+                // Si le champ 'title' est vide, définissez un titre par défaut
+                $newPdf->setTitle('PDF');
+            }
+
+            $newPdf
+            ->setUserId($user)
+            // ->setTitle('PDF')
+            ->setCreatedAt($time)
+            ->setContent($pdfContent);
+
+            $entityManager->persist($newPdf);
+            $entityManager->flush();
+
+            return new Response($pdfContent, 200, [
+            'Content-Type' => 'application/pdf',
+        ]);
+        }
+
         return $this->render('pdf/index.html.twig', [
             'form' => $form->createView(),
         ]);
-        
     }
 
-    public function generatePdf(Request $request): Response
-    {
-        // Récupérer l'URL saisie à partir des données du formulaire
-        $url = $request->request->get('url');
 
-        // Faites appel à votre service pour générer le PDF
-        $pdf = $this->gotenbergService->CreatePdf($url);
+    // public function generatePdfHtml(GotenbergService $gotenbergService): Response
+    // {
+    //     $htmlContent = new File('../../public/uploads/html/index.html');
+    //     $pdfContent = $gotenbergService->generatePdfFromHtml($htmlContent);
 
-        // Afficher le contenu PDF généré en tant que réponse HTTP
-        return new Response($pdf, 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="document.pdf"',
-        ]);
-    }
+    //     return new Response($pdfContent, 200, [
+    //         'Content-Type' => 'application/pdf',
+    //     ]);
+    // }
 
+    
+//     public function index(): Response
+//     {
+//         return $this->render('gotenberg/index.html.twig', [
+//             'controller_name' => 'GotenbergController',
+//             'form' => $form->createView(),
+//         ]);
+//     }
 }
