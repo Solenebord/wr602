@@ -15,8 +15,8 @@ use App\Entity\Subscription;
 use App\Entity\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\Pdf;
-
-
+use App\Repository\PdfRepository;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 
 class PdfController extends AbstractController
@@ -27,53 +27,70 @@ class PdfController extends AbstractController
         $this->gotenbergService = $gotenbergService;
     }
 
-    // #[Route('/gotenberg', name: 'app_gotenberg')]
-    public function generatePdfForm(Request $request, GotenbergService $gotenbergService, UserInterface $user, EntityManagerInterface $entityManager): Response
-
+    public function generatePdfForm(Request $request, GotenbergService $gotenbergService, UserInterface $user, EntityManagerInterface $entityManager, PdfRepository $pdfRepository, SessionInterface $session): Response
     {
+        // par défault l'utilisateur est autorisé à générer des pdf
+        $isAllowed = true;
+
         $form = $this->createFormBuilder()
             ->add('url', null, ['required' => true])
             ->add('title', TextType::class, ['required' => false])
             ->getForm();
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $url = $request->getPayload()->get('url');
-            $title = $request->getPayload()->get('title');
-            /* $url = $form->getData()['url'];
-            $title = $form->getData()['title']; */
-
-            $pdfContent = $gotenbergService->CreatePdf($url);
-
-            $time = new \DateTimeImmutable;
-            // $date = $time->format('Y-m-d H:i:s');
-
-            $newPdf = new PDF;
-
-            if (!empty($title)) { // Vérifiez si le champ 'title' n'est pas vide
-                // Si le champ 'title' n'est pas vide, utilisez sa valeur
-                $newPdf->setTitle($title);
-            } else {
-                // Si le champ 'title' est vide, définissez un titre par défaut
-                $newPdf->setTitle('PDF');
+        // récupérer la limite de pdf de l'abonnement
+        $pdfLimit = $user->getSubscriptionId()->getPdfLimit();
+        
+        // Récupérer la date actuelle
+        $startOfDay = new \DateTime('today midnight');
+        $endOfDay = new \DateTime('tomorrow midnight');
+            
+        // Compter le nombre de PDF générés pour la journée actuelle
+        $pdfCount = $pdfRepository->countPdfGeneratedByUserOnDate($user->getId(), $startOfDay, $endOfDay);
+            
+        // Vérifier si l'utilisateur a dépassé la limite de PDF
+        if ($pdfCount >= $pdfLimit) {
+            // si la limite pdf est atteinte
+            $isAllowed = false;
+        } else { 
+            // si l'utilisateur n'a pas dépassé la limite -> afficher le formulaire
+            if ($form->isSubmitted() && $form->isValid()) {
+                $url = $request->getPayload()->get('url');
+                $title = $request->getPayload()->get('title');
+    
+                $pdfContent = $gotenbergService->CreatePdf($url);
+    
+                $time = new \DateTimeImmutable;
+                // $date = $time->format('Y-m-d H:i:s');
+    
+                $newPdf = new PDF;
+    
+                if (!empty($title)) { // Vérifier si le champ est remlpi
+                    $newPdf->setTitle($title);
+                } else {
+                    $newPdf->setTitle('PDF');
+                }
+    
+                $newPdf
+                ->setUserId($user)
+                // ->setTitle('PDF')
+                ->setCreatedAt($time)
+                ->setContent($pdfContent);
+    
+                $entityManager->persist($newPdf);
+                $entityManager->flush();
+    
+                return new Response($pdfContent, 200, [
+                'Content-Type' => 'application/pdf',
+            ]);
             }
 
-            $newPdf
-            ->setUserId($user)
-            // ->setTitle('PDF')
-            ->setCreatedAt($time)
-            ->setContent($pdfContent);
-
-            $entityManager->persist($newPdf);
-            $entityManager->flush();
-
-            return new Response($pdfContent, 200, [
-            'Content-Type' => 'application/pdf',
-        ]);
         }
-
+        
         return $this->render('pdf/index.html.twig', [
             'form' => $form->createView(),
+            'pdfLimit' => $pdfLimit,
+            'isAllowed' => $isAllowed,
         ]);
     }
 

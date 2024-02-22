@@ -19,7 +19,7 @@ class AppFixtures extends Fixture
         //     FREE
         $subscriptionFree = new Subscription();
         $subscriptionFree->setTitle('Free');
-        $subscriptionFree->setDescription('Abonnement gratuit par défaut, 2 PDF/jour.');
+        $subscriptionFree->setDescription('Default subscription, allow you to convert a small amount of PDFs per day.');
         $subscriptionFree->setPdfLimit(2);
         $subscriptionFree->setPrice(0.00);
             $manager->persist($subscriptionFree);
@@ -27,7 +27,7 @@ class AppFixtures extends Fixture
             //PREMIUM
         $subscriptionPremium = new Subscription();
         $subscriptionPremium->setTitle('Premium');
-        $subscriptionPremium->setDescription('Abonnement premium, 4 PDF/jour.');
+        $subscriptionPremium->setDescription('Premium subscription, allow you to convert a medium amount of PDFs per day.');
         $subscriptionPremium->setPdfLimit(4);
         $subscriptionPremium->setPrice(9.99);
             $manager->persist($subscriptionPremium);
@@ -35,7 +35,7 @@ class AppFixtures extends Fixture
             //ULTRA
         $subscriptionUltra = new Subscription();
         $subscriptionUltra->setTitle('Ultra');
-        $subscriptionUltra->setDescription('Abonnement Ultra, 100 PDF/jour.');
+        $subscriptionUltra->setDescription('Ultra subscription, allow you to convert a HUGE amount of PDFs per day!');
         $subscriptionUltra->setPdfLimit(100);
         $subscriptionUltra->setPrice(19.99);
             $manager->persist($subscriptionUltra);
