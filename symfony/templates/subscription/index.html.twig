@@ -13,10 +13,14 @@
 <div class="example-wrapper">
     <h1>Hello {{ controller_name }}! ✅</h1>
 
-    <ul>
+    
         {% for subscription in subscriptions %}
         <div class="carte">
-        <li>{{ subscription.title }}</li>
+        <h1>{{ subscription.title }}</h1>
+        <p>Price: ${{ subscription.price }}</p>
+        <p>{{ subscription.pdfLimit }} pdf/day</p>
+        <p>{{ subscription.description }}</p>
+
         <form method="post" action="{{path('subscription_validation')}}">
             <input type="hidden" name="title" value="{{ subscription.title }}">
             {% if currentSubscription == subscription.title %}
@@ -27,9 +31,9 @@
 
         </form>
         </div>
-            <!-- Afficher d'autres informations sur l'abonnement si nécessaire -->
+           
         {% endfor %}
-    </ul>
+   
 
 </div>
 {% endblock %}

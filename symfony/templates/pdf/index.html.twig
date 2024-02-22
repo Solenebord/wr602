@@ -11,12 +11,14 @@
 <div class="example-wrapper">
     <h1>Hello ✅</h1>
 
+    <p>pdf limit: {{ pdfLimit }}</p>
     {# <form method="post" action="{{ path('app_generate_pdf') }}" target="blank">
         <label for="url">URL:</label>
         <input type="text" id="url" name="url" required />
         <button type="submit">Générer PDF</button>
     </form> #}
 
+    {% if isAllowed == true %}
     <form method="post" action="{{ path('app_pdf') }}" target="_blank" enctype="multipart/form-data">
         {{ form_row(form._token) }}
         <label for="title">Title:</label>
@@ -25,6 +27,9 @@
         <input type="text" id="url" name="url" placeholder="https://bigrat.monster/" required />
         <button type="submit">Generate PDF</button>
     </form>
+    {% else %}
+    <p>You reached your subscription pdf limit for today.</p>
+    {% endif %}
 
 </div>
 
