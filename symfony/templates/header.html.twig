@@ -1,0 +1,23 @@
+<header>
+    <nav> 
+        <a href="{{ path('homepage') }}">Home</a>
+
+        <a href="{{ path('subscription') }}">Subscription</a>
+
+        <a href="{{ path('app_pdf') }}">Generate PDF</a>
+
+        <a href="{{ path('history') }}">History</a>
+
+        <div>
+        {% if app.user %}
+
+            Hi {{ app.user.userIdentifier }} ! <a href="{{ path('app_logout') }}">Logout</a>
+
+        {% else %}
+
+            <a href="{{ path('app_login') }}">Login</a> | <a href="{{ path('app_register') }}">Register</a>
+
+        {% endif %}
+        </div>
+    </nav>
+</header>

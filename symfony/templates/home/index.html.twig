@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PDF GENERATOR{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    a {text-decoration: none; color: black;}
+</style>
+
+<div class="example-wrapper">
+    <h1>Welcome to PDF GENERATOR</h1>
+    {% if app.user %}
+        You are logged in as {{ app.user.userIdentifier }} ! 
+    {% endif %}
+
+    <p>The one and only trustworthy website to generate your PDFs!</p>
+    <p>With our UNIQUE and SAFE service, you can generate as many PDFs as your subscription allows and impress your friends by showing them your amazing understanding of such a rare technology!</p>
+    <p>We propose a wide offer of subscriptions to suit your needs. You can be content with our free subscription if you only need to generate a pdf occasionally, or you can pay to generate as many as 100 pdfs per day!</p>
+    <p>Do not hesitate and make your life easier by using our service!</p>
+
+    <h2>Our subscriptions:</h2>
+    <a href="{{ path('subscription') }}">
+    <div class="cards">
+    {% for subscription in subscriptions %}
+        <div class="card">
+            <h3>{{ subscription.title }}</h3>
+            <p>Price: ${{ subscription.price }}</p>
+            <p>{{ subscription.pdfLimit }} pdf/day</p>
+            <p>{{ subscription.description }}</p>
+        </div>
+    {% endfor %}
+    </div>
+    </a>
+</div>
+{% endblock %}

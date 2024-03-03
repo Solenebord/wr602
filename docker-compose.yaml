@@ -1,0 +1,60 @@
+version: '3.8'
+services:
+  web:
+    image: mmi3docker/symfony
+    container_name : symfony
+    restart: always
+
+    ports:
+      - 8088:80
+
+    depends_on:
+      - db
+
+    volumes:
+      - ./www/:/var/www
+      - ./sites/:/etc/apache2/sites-enabled/
+
+  db:
+    image: mariadb:10.8
+    container_name: mariadb
+    restart: always
+
+    volumes:
+      - db-volume:/var/lib/mysql
+
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: db_symfony
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 123456
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_docker_symfony
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8090:80
+
+  maildev:
+    image: maildev/maildev
+    container_name: maildev_docker_symfony
+    command: bin/maildev --web 80 --smtp 1025 --hide-extensions STARTTLS
+    restart: always
+    ports:
+      - 8081:80
+  
+  gotenberg:
+    image: gotenberg/gotenberg:8
+    restart: always
+    ports:
+      - "3000:3000"
+
+volumes:
+  db-volume:

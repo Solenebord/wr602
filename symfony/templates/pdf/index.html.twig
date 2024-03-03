@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Generate PDF{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; text-align: center; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    form { display: flex; flex-direction: column; align-items: center;}
+    form * { margin: 10px; }
+</style>
+
+<div class="example-wrapper">
+    <h1>Generate your PDF!</h1>
+
+    <p>You can generate {{ pdfLimit }} pdfs per day!</p>
+
+    {% if isAllowed == true %}
+        <form method="post" action="{{ path('app_pdf') }}" target="_blank" enctype="multipart/form-data">
+            {{ form_row(form._token) }}
+            <label for="title">Your PDF title</label>
+            <input type="text" id="title" name="title" placeholder="PDF"/>
+            <label for="url">Your PDF URL</label>
+            <input type="text" id="url" name="url" placeholder="https://bigrat.monster/" required />
+            <button type="submit">Generate PDF</button>
+        </form>
+    {% else %}
+        <p>You reached your subscription pdf limit for today.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
