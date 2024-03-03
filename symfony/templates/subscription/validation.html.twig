@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello SubscriptionController!{% endblock %}
+{% block title %}Subscriptions{% endblock %}
 
 {% block body %}
 <style>
@@ -9,9 +9,11 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
 
-    <p>Votre abonnement a été changé pour l'abonnement {{ title }}</p>
+    <p>You successfully updated your subscription ! Your new subscription : {{ title }}.</p>
+    <p>Use your new subscription wisely!</p>
+    <a href="{{ path('app_pdf') }}">Generate more PDF!</a>
+
 
 </div>
 {% endblock %}
