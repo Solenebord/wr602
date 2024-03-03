@@ -8,8 +8,47 @@
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
+
+        {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+        
+
+
     </head>
     <body>
+        <style>
+            nav {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+                margin-bottom: 50px;
+                padding: 10px;
+            }
+
+            nav a {
+                text-decoration: none;
+                color: black;
+                font-weight: bold;
+            }
+
+            .cards {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-around;
+            }
+
+            .card {
+                border: 1px solid black;
+                border-radius: 15px;
+                padding: 10px 30px;
+                margin: 10px;
+            }
+
+            h1 {
+                text-align: center;
+            }
+        </style>
         {% include 'header.html.twig' %}
         {% block body %}{% endblock %}
     </body>
